@@ -31,7 +31,7 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-              firebase.database().ref('/hi').on('value', snapshot => {
+              firebase.database().ref('/todo/items').on('value', snapshot => {
                   let data = snapshot.val();
                   document.getElementById("listBox").innerText=data;
                });

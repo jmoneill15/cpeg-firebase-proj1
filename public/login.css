@@ -112,6 +112,7 @@ body{
 }
 #signinButton:hover{
     box-shadow: 0 3px 10px rgba(56, 5, 5, 0.606);
+    background-color: #360c18;
 }
 
 /* sign up button */
