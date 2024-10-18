@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+         <!-- update the version number as needed -->
+    <script defer src="/__/firebase/10.14.1/firebase-app-compat.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/10.14.1/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/10.14.1/firebase-database-compat.js"></script>
+
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+        <link id="pageStyles" rel="stylesheet" href="/todo.css"/>
+    </head>
+ <body>
+    <div id="toDo-page">
+        <header id="title">To Do List:</header>
+        <form id="inputForm">
+            <div>
+                <input id="inputBox" type="textarea" name="name" value="New Entry Here">
+                <input id="addTask" type="submit" value="Add Task">
+            </div>
+            <div id="listBox">
+                <div class="item" id="item1">
+                    <input type="checkbox" id="input3" checked>
+                </div>
+            </div>
+       
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              firebase.database().ref('/hi').on('value', snapshot => {
+                  let data = snapshot.val();
+                  document.getElementById("listBox").innerText=data;
+               });
+              
+            });
+          </script> 
+          </form>
+        <a href="index.html">
+            <button>Last Page</button>
+            </a>
+    </div>
+</body>

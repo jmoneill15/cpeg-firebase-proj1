@@ -1,0 +1,134 @@
+body{
+    background-color: #022B3A;
+}
+/* entire page */
+#signup{
+    position: relative;
+    margin: 10%;
+    align-items: center;
+    justify-content: center;
+}
+/* sign up header */
+#header{
+    color: #ededef;
+    font-size: 9vh;
+    font-weight: 200;
+    align-self: center;
+    width: 100%;
+    margin-bottom: 30px;
+    font-family: "Garamond", Times, serif;
+}
+#form{
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 10% 25%;
+}
+
+#usernameSection{
+    position: relative;
+    margin-bottom: 20px;
+    width:100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#username{
+    color:  #738290;;
+    padding-right: 3px;
+    font-family: "Garamond", Times, serif;
+    margin-bottom: 3px;
+    font-size: 20px;
+}
+#usernameInput{
+    position: relative;
+    background-color: #012430;
+    color: #32161F;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 210px;
+    border: 3px solid #32161F;
+    height: 20px;
+    border-radius: 20px; 
+    font-family: "Garamond", Times, serif;
+    padding: 4px;
+}
+
+/* create password section */
+#password1Section{
+    position: relative;
+    margin-bottom: 20px;
+    width:100%;
+    justify-content: center;
+    align-items: center;
+}
+#password1{
+    color:  #738290;;
+    padding-right: 3px;
+    font-family: "Garamond", Times, serif;
+    font-size: 20px;
+}
+
+#passwordInput1{
+    position: relative;
+    background-color: #012430;
+    color: #32161F;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 210px;
+    border: 3px solid #32161F;
+    height: 20px;
+    border-radius: 20px; 
+    font-family: "Garamond", Times, serif;
+    padding: 4px;
+}
+
+/* confirm passoword section */
+#password2Section{
+    position: relative;
+    margin-bottom: 20px;
+    width:100%;
+    justify-content: center;
+    align-items: center;
+}
+#password2{
+    color:  #738290;;
+    padding-right: 3px;
+    font-family: "Garamond", Times, serif;
+    font-size: 20px;
+}
+
+#passwordInput2{
+    position: relative;
+    background-color: #012430;
+    color: #32161F;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 210px;
+    border: 3px solid #32161F;
+    height: 20px;
+    border-radius: 20px; 
+    font-family: "Garamond", Times, serif;
+    padding: 4px;
+}
+
+/* submit button */
+#submitButton{
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    border: 2px #32161F;
+    border-radius: 20px;
+    width: 90px;
+    height: 28px;
+    background-color: #32161F;
+    color: #FFFDFD;
+    font-size: medium;
+    margin: 5px 28px;
+    font-family: "Garamond", Times, serif;
+}
