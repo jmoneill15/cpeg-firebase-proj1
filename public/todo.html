@@ -17,22 +17,28 @@
     </head>
  <body>
     <div id="toDo-page">
-        <header id="title">To Do List:</header>
+        <div id="headerArea">
+            <header id="title">To Do List:</header>
+            <a href="index.html">
+                <button id="logOut">Log Out</button>
+            </a>
+        </div>
+        
         <form id="inputForm">
-            <div>
-                <input id="inputBox" type="textarea" name="name" value="New Entry Here">
+            <div id="newEntryBox">
+                <input id="inputBox" type="textarea" name="name" placeholder="New Entry Here">
                 <input id="addTask" type="submit" value="✓">
             </div>
-            <div id="listBox">
+            <ul id="listBox">
                 <div class="item" id="item1">
-                    <input type="checkbox" id="input3" checked>
+                
                 </div>
-            </div>
-       
+            </ul>
 
         <script>
+            userId = localStorage.getItem('userId');
             document.addEventListener('DOMContentLoaded', function() {
-              firebase.database().ref('/todo/items').on('value', snapshot => {
+              firebase.database().ref('users/' + userId + '/todo').on('value', snapshot => {
                   let data = snapshot.val();
                   document.getElementById("listBox").innerText= data;
                });
@@ -40,9 +46,8 @@
             });
           </script> 
           </form>
-        <a href="index.html">
-            <button>Last Page</button>
-            </a>
+          <Button id="editButton">✎</Button>
+          <Button id="deleteButton">X</Button>
     </div>
     <script type="module">
         // Import the functions you need from the SDKs you need
@@ -65,5 +70,25 @@
   
         //const analytics = getAnalytics(app);
         const db = getDatabase(app);
+
+        let inputBox = document.getElementById("inputBox");
+        let addTask = document.getElementById("addTask");
+        let listBox = document.getElementById("listBox");
+
+        const userId = localStorage.getItem('userId');
+        //console.log("userId " + userId); 
+
+        function AddTask(){
+
+        }
+
+        function EditTask(){
+
+        }
+
+        function DeleteTask(){
+
+        }
+
         </script>
 </body>

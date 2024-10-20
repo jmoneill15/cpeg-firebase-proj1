@@ -68,8 +68,9 @@
       let password = document.getElementById("password");
       let signinButton = document.getElementById("signinButton");
 
+      let userId = "";
+
       function checkUser(event) {
-        console.log("start");
           event.preventDefault(); // Prevents form from submitting and refreshing the page
 
           // Get input values
@@ -97,6 +98,11 @@
               // Check if the username and password match
               if (userData.username === usernameInput && userData.password === passwordInput) {
                 userExists = true;
+
+                //saves user id to later call for the todo list
+                userId = userData.id;
+                localStorage.setItem('userId', userId);
+                
                 console.log("Login successful for user:", userData.username);
                 window.location.href = "todo.html"; // Redirect to next page
               }
