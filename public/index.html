@@ -36,10 +36,6 @@
       <button id="signupButton">New User? Sign Up!</button>
     </a>
 
-    <a href="todo.html">
-      <button>Next Page</button>
-    </a>
-
     <script type="module">
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -102,7 +98,7 @@
                 //saves user id to later call for the todo list
                 userId = userData.id;
                 localStorage.setItem('userId', userId);
-                
+
                 console.log("Login successful for user:", userData.username);
                 window.location.href = "todo.html"; // Redirect to next page
               }
