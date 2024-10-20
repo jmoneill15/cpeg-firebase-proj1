@@ -32,21 +32,17 @@
                 <input id="addTask" type="submit" value="✓">
             </div>
             <ul id="listBox">
+                <div id="taskBoxTest" class="taskBox">
+                    <div id="taskText" class="taskText">shshshhshshshshhshshs
+                    </div>
+                    <div class="buttonDiv">
+                        <Button id="editButton" class="editButton">✎</Button>
+                        <Button id="deleteButton" class="deleteButton">X</Button>
+                    </div>
+                </div>
             </ul>
-
-            <script>
-                userId = localStorage.getItem("userId");
-                document.addEventListener("DOMContentLoaded", function () {
-                    firebase.database().ref("users/" + userId + "/todo").on("value", snapshot => {
-                        let data = snapshot.val();
-                        document.getElementById("listBox").innerText = data;
-                    });
-
-                });
-            </script>
         </form>
-        <Button id="editButton">✎</Button>
-        <Button id="deleteButton">X</Button>
+
     </div>
     <script type="module">
         // Import the functions you need from the SDKs you need
@@ -65,7 +61,7 @@
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        import { getDatabase, ref, set, onValue, child, get, push, update } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+        import { getDatabase, ref, set, onValue, child, get, push, update, remove } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
 
         //const analytics = getAnalytics(app);
         const db = getDatabase(app);
@@ -79,30 +75,34 @@
         const userId = localStorage.getItem("userId");
         console.log("userId " + userId);
 
-        function AddTask() {
+        function setupTaskListener() {
+            const inputForm = document.getElementById("inputForm"); // Assuming this is your form ID
             inputForm.addEventListener("submit", function (event) {
                 event.preventDefault(); // Prevent the form from submitting normally
-
-                const newTask = inputBox.value.trim(); // Get the value from the input box
-
-                if (newTask) {
-                    // Use 'ref' to create a reference to 'todo'
-                    const todoRef = ref(db, "users/" + userId + "/todo");
-
-                    // Generate a new unique key
-                    const newTaskRef = push(todoRef); // This generates a unique key
-
-                    // Use set() to set the new task under the unique key
-                    set(newTaskRef, newTask).then(() => { // Set the task data directly
-                        console.log("Task added successfully!");
-                        inputBox.value = ""; // Clear the input box
-                    }).catch((error) => {
-                        console.error("Error adding task: ", error);
-                    });
-                } else {
-                    console.log("Need to add a task");
-                }
+                AddTask(); // Call the function to add the task
             });
+        }
+
+        function AddTask() {
+            const newTask = inputBox.value.trim(); // Get the value from the input box
+
+            if (newTask) {
+                const todoRef = ref(db, "users/" + userId + "/todo");
+
+                // Make a new unique key
+                const newTaskRef = push(todoRef);
+
+                //set the new task under the unique key
+                set(newTaskRef, newTask).then(() => {
+                    console.log("Task added successfully!");
+                    inputBox.value = ""; // Clear input box
+                }).catch((error) => {
+                    console.error("Error adding task: ", error);
+                });
+            } else {
+                console.log("Need to add a task");
+            }
+
         }
 
 
@@ -112,36 +112,89 @@
             // Using onValue to listen for changes
             onValue(todoRef, (snapshot) => {
                 const tasks = snapshot.val(); // Get the current value of 'todo'
+                listBox.innerHTML = '';
                 if (tasks) {
                     console.log("Current tasks: ", tasks);
                     // Iterate through each task
                     for (const key in tasks) {
                         if (tasks.hasOwnProperty(key)) {
                             const task = tasks[key]; // Access the task value
-                            //console.log(`Task ID: ${key}, Task: ${task}`); // Log the task ID and value
-                            document.getElementById("listBox").innerText = task;
+                            //console.log(`Task ID: ${key}, Task: ${task}`); 
+                            createTaskDiv(key, task);
                         }
                     }
                 } else {
                     console.log("No tasks found.");
                 }
-            }, {
-                onlyOnce: true // Set to true if you only want to read the data once
             });
         }
 
-        function EditTask() {
+        /* creates divs for each of the tasks*/
+        function createTaskDiv(taskId, taskText) {
+            const listBox = document.getElementById("listBox");
 
+            const taskBox = document.createElement("div");
+            taskBox.classList.add("taskBox");
+
+            const taskTextDiv = document.createElement("div");
+            taskTextDiv.classList.add("taskText");
+            taskTextDiv.innerText = taskText;
+
+            const buttonDiv = document.createElement("div");
+            buttonDiv.classList.add("buttonDiv");
+
+            const editButton = document.createElement("button");
+            editButton.classList.add("editButton");
+            editButton.innerText = "✎";
+            editButton.addEventListener("click", () => EditTask(taskId, taskText));
+
+            const deleteButton = document.createElement("button");
+            deleteButton.classList.add("deleteButton");
+            deleteButton.innerText = "X";
+            deleteButton.addEventListener("click", () => DeleteTask(taskId));
+
+            buttonDiv.appendChild(editButton);
+            buttonDiv.appendChild(deleteButton);
+            taskBox.appendChild(taskTextDiv);
+            taskBox.appendChild(buttonDiv);
+            listBox.appendChild(taskBox);
+            console.log(taskId);
         }
 
-        function DeleteTask() {
-
+        function EditTask(taskId, currentTask) {
+            const newText = prompt("Edit task:", currentTask); // ask for text
+            if (newText !== null) {
+                if (newText.trim()) {
+                    const taskRef = ref(db, "users/" + userId + "/todo/" + taskId);
+                    set(taskRef, newText) //Change to new input
+                        .then(() => {
+                            console.log("Task updated successfully!");
+                        })
+                        .catch((error) => {
+                            console.error("Error updating task: ", error);
+                        });
+                } else {
+                    console.log("Task cannot be empty.");
+                }
+            }
         }
 
-        addTask.addEventListener("click", AddTask);
-        editButton.addEventListener("click", EditTask);
-        deleteButton.addEventListener("click", DeleteTask);
-        loadTasks();
+        function DeleteTask(taskId) {
+            console.log(taskId);
+            const taskRef = ref(db, "users/" + userId + "/todo/" + taskId);
+            remove(taskRef)
+                .then(() => {
+                    console.log("Task deleted successfully!");
+                })
+                .catch((error) => {
+                    console.error("Error deleting task: ", error);
+                });
+        }
 
+        function startPage() {
+            setupTaskListener();
+            loadTasks();
+        }
+        document.addEventListener("DOMContentLoaded", startPage);
     </script>
 </body>
