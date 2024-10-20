@@ -41,7 +41,7 @@ body{
 #username{
     position: relative;
     background-color: #022B3A;
-    color: #32161F;
+    color: #ededef;
     position: relative;
     align-items: center;
     justify-content: center;
@@ -78,7 +78,7 @@ body{
 #password{
     position: relative;
     background-color: #022B3A;
-    color: #32161F;
+    color: #ededef;
     position: relative;
     align-items: center;
     justify-content: center;
@@ -88,6 +88,7 @@ body{
     border-radius: 5px; 
     font-family: "Garamond", Times, serif;
     padding: 4px;
+
 }
 #password:hover{
     box-shadow: 0 2.5px 10px #011e29;

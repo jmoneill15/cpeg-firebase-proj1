@@ -6,13 +6,14 @@
         <meta content="width=device-width, initial-scale=1" name="viewport" />
 
          <!-- update the version number as needed -->
-    <script defer src="/__/firebase/10.14.1/firebase-app-compat.js"></script>
+        <script defer src="/__/firebase/10.14.1/firebase-app-compat.js"></script>
     <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/10.14.1/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/10.14.1/firebase-database-compat.js"></script>
+        <script defer src="/__/firebase/10.14.1/firebase-auth-compat.js"></script>
+        <script defer src="/__/firebase/10.14.1/firebase-database-compat.js"></script>
 
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+        <script defer src="/__/firebase/init.js?useEmulator=true"></script>
         <link id="pageStyles" rel="stylesheet" href="/todo.css"/>
+        
     </head>
  <body>
     <div id="toDo-page">
@@ -20,7 +21,7 @@
         <form id="inputForm">
             <div>
                 <input id="inputBox" type="textarea" name="name" value="New Entry Here">
-                <input id="addTask" type="submit" value="Add Task">
+                <input id="addTask" type="submit" value="✓">
             </div>
             <div id="listBox">
                 <div class="item" id="item1">
@@ -33,7 +34,7 @@
             document.addEventListener('DOMContentLoaded', function() {
               firebase.database().ref('/todo/items').on('value', snapshot => {
                   let data = snapshot.val();
-                  document.getElementById("listBox").innerText=data;
+                  document.getElementById("listBox").innerText= data;
                });
               
             });
@@ -43,4 +44,26 @@
             <button>Last Page</button>
             </a>
     </div>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        //import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
+        const firebaseConfig = {
+          apiKey: "AIzaSyDR-KgyPWiGSM7kz2dioVVWlFZO1g35SvE",
+          authDomain: "cpeg470-proj1-2b1ec.firebaseapp.com",
+          databaseURL: "https://cpeg470-proj1-2b1ec-default-rtdb.firebaseio.com",
+          projectId: "cpeg470-proj1-2b1ec",
+          storageBucket: "cpeg470-proj1-2b1ec.appspot.com",
+          messagingSenderId: "900830850408",
+          appId: "1:900830850408:web:f47604d97db5457b5c3add",
+          measurementId: "G-N41B7W2X03"
+        };
+  
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        import { getDatabase, ref, set, onValue, child, get, push, update } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+  
+        //const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+        </script>
 </body>

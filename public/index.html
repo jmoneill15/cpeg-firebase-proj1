@@ -1,44 +1,119 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/10.14.1/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/10.14.1/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/10.14.1/firebase-database-compat.js"></script>
 
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link id="pageStyles" rel="stylesheet" href="/login.css"/>
-  </head>
-  <body>
-    <div id="login">
-      <div id="header">Log In</div>
-      <form id="loginform">
-          <div id="usernameSection">
-              <label for="username" id="usernameLabel">Username: </label>
-              <input type="text" id="username" placeholder="Enter Username" required autocomplete="username">
-          </div>
-          <div id="passwordSection">
-              <label for="password" id="passwordLabel" >Password: </label>
-              <input type="text" id="password" placeholder="Enter Password" required>
-          </div>
-          <input id="signinButton" type="submit" value="Sign In">
-      </form>
+  <!-- update the version number as needed -->
+  <script defer src="/__/firebase/10.14.1/firebase-app-compat.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/10.14.1/firebase-auth-compat.js"></script>
+  <script defer src="/__/firebase/10.14.1/firebase-database-compat.js"></script>
 
-      <a href="signup.html">
-          <button id="signupButton">New User? Sign Up!</button>
-      </a>
+  <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
-      <a href="todo.html">
+  <link id="pageStyles" rel="stylesheet" href="/login.css" />
+
+</head>
+
+<body>
+  <div id="login">
+    <div id="header">Log In</div>
+    <form id="loginform">
+      <div id="usernameSection">
+        <label for="username" id="usernameLabel">Username: </label>
+        <input type="text" id="username" placeholder="Enter Username" required autocomplete="username">
+      </div>
+      <div id="passwordSection">
+        <label for="password" id="passwordLabel">Password: </label>
+        <input type="text" id="password" placeholder="Enter Password" required>
+      </div>
+      <input id="signinButton" type="submit" value="Sign In">
+    </form>
+
+    <a href="signup.html">
+      <button id="signupButton">New User? Sign Up!</button>
+    </a>
+
+    <a href="todo.html">
       <button>Next Page</button>
-      </a>
+    </a>
 
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+      //import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyDR-KgyPWiGSM7kz2dioVVWlFZO1g35SvE",
+        authDomain: "cpeg470-proj1-2b1ec.firebaseapp.com",
+        databaseURL: "https://cpeg470-proj1-2b1ec-default-rtdb.firebaseio.com",
+        projectId: "cpeg470-proj1-2b1ec",
+        storageBucket: "cpeg470-proj1-2b1ec.appspot.com",
+        messagingSenderId: "900830850408",
+        appId: "1:900830850408:web:f47604d97db5457b5c3add",
+        measurementId: "G-N41B7W2X03"
+      };
 
-    </div>
-  </body>
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      import { getDatabase, ref, set, onValue, child, get, push, update } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+      import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+
+      //const analytics = getAnalytics(app);
+      const db = getDatabase(app);
+      const auth = getAuth(app);
+
+      let username = document.getElementById("username");
+      let password = document.getElementById("password");
+      let signinButton = document.getElementById("signinButton");
+
+      function checkUser(event) {
+        console.log("start");
+          event.preventDefault(); // Prevents form from submitting and refreshing the page
+
+          // Get input values
+          let usernameInput = document.getElementById("username").value;
+          let passwordInput = document.getElementById("password").value;
+
+          // Ensure the inputs are not empty
+          if (!usernameInput || !passwordInput) {
+            console.log("Please enter both username and password.");
+            return;
+          }
+
+          // Reference to your Firebase Database 'users' node
+          const dbRef = ref(db, "users");
+
+          console.log("Checking user credentials...");
+
+          // Fetch the users data from Firebase
+          onValue(dbRef, (snapshot) => {
+            let userExists = false;
+
+            snapshot.forEach((userSnapshot) => {
+              const userData = userSnapshot.val();
+
+              // Check if the username and password match
+              if (userData.username === usernameInput && userData.password === passwordInput) {
+                userExists = true;
+                console.log("Login successful for user:", userData.username);
+                window.location.href = "todo.html"; // Redirect to next page
+              }
+            });
+
+            if (!userExists) {
+              console.log("Invalid username or password");
+              // You can show an error message to the user here
+            }
+          }, (error) => {
+            console.error("Error reading from Firebase:", error);
+          });
+        }
+
+        signinButton.addEventListener('click', checkUser);
+    </script>
+  </div>
+</body>
+
 </html>
-

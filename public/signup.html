@@ -1,41 +1,125 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-         <!-- update the version number as needed -->
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <!-- update the version number as needed -->
     <script defer src="/__/firebase/10.14.1/firebase-app-compat.js"></script>
     <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/10.14.1/firebase-auth-compat.js"></script>
     <script defer src="/__/firebase/10.14.1/firebase-database-compat.js"></script>
-
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-        <link id="pageStyles" rel="stylesheet" href="/signup.css"/>
-    </head>
- <body>
+    <link id="pageStyles" rel="stylesheet" href="/signup.css" />
+</head>
+
+<body>
     <div id="signup">
         <div id="header">Sign Up</div>
         <div id="form">
             <form id="signupForm">
                 <div id="usernameSection">
                     <label id="username">Enter a Username:</label>
-                    <input type="text" id="usernameInput"  required>
+                    <input type="text" id="usernameInput" required>
                 </div>
                 <div id="password1Section">
                     <label id="password1">Create a Password:</label>
-                    <input type="text" id="passwordInput1"  required>
+                    <input type="text" id="passwordInput1" required>
                 </div>
                 <div id="password2Section">
                     <label id="password2">Confirm Password:</label>
                     <input type="text" id="passwordInput2" required>
                 </div>
-                <input id="submitButton" type="submit">
+                <input id="submitButton" type="submit" >
             </form>
         </div>
         <a href="index.html">
             <button>Back to Login</button>
         </a>
+
     </div>
- </body>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        //import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyDR-KgyPWiGSM7kz2dioVVWlFZO1g35SvE",
+            authDomain: "cpeg470-proj1-2b1ec.firebaseapp.com",
+            databaseURL: "https://cpeg470-proj1-2b1ec-default-rtdb.firebaseio.com",
+            projectId: "cpeg470-proj1-2b1ec",
+            storageBucket: "cpeg470-proj1-2b1ec.appspot.com",
+            messagingSenderId: "900830850408",
+            appId: "1:900830850408:web:f47604d97db5457b5c3add",
+            measurementId: "G-N41B7W2X03"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        import { getDatabase, ref, set, onValue, child, get, push, update } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+
+        //const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+
+        let usernameInput = document.getElementById("usernameInput");
+        let passwordInput1 = document.getElementById("passwordInput1");
+        let passwordInput2 = document.getElementById("passwordInput2");
+        let submitButton = document.getElementById("submitButton");
+
+        const newUserKey = push(child(ref(db), 'users')).key;
+
+        function AddData() {
+            if (passwordInput1.value === passwordInput2.value) {
+                set(ref(db, "users/" + newUserKey), {
+                    username: usernameInput.value,
+                    password: passwordInput1.value,
+                    id: newUserKey,
+                    todo: "",
+                }).then(() => {
+                    alert("Account Created Successfully");
+                }).catch(() => {
+                    console.log(error);
+                })
+            }
+            else {
+                alert("Passwords do not match");
+                console.log(error);
+            }
+       }
+    
+        
+        function RetrieveData(userKey) {
+            const dbRef = ref(db);
+
+            get(child(dbRef, "users/" + userKey)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    usernameInput.value = snapshot.val().username;
+                    passwordInput1.value = snapshot.val().password;
+                    //newUserKey = snapshot.val().id;
+                }
+                else {
+                    alert("Account does not exist");
+                }
+            }).catch((error) => {
+                alert("Unsuccessful");
+                console.log(error);
+            });
+        }
+
+        function createUser(){
+            event.preventDefault();  
+
+            if ((usernameInput!= null)&& (passwordInput1 != null) && (passwordInput2 != null) &&(passwordInput1.value === passwordInput1.value)) {
+                AddData();
+            }
+            else{
+                alert("Passwords do not match");
+                console.log(error);
+            }
+        }
+
+        submitButton.addEventListener('click', createUser);
+    </script>
+</body>
+
 </html>
