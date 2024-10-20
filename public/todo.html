@@ -1,21 +1,23 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
 
-         <!-- update the version number as needed -->
-        <script defer src="/__/firebase/10.14.1/firebase-app-compat.js"></script>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/10.14.1/firebase-app-compat.js"></script>
     <!-- include only the Firebase features as you need -->
-        <script defer src="/__/firebase/10.14.1/firebase-auth-compat.js"></script>
-        <script defer src="/__/firebase/10.14.1/firebase-database-compat.js"></script>
+    <script defer src="/__/firebase/10.14.1/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/10.14.1/firebase-database-compat.js"></script>
 
-        <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-        <link id="pageStyles" rel="stylesheet" href="/todo.css"/>
-        
-    </head>
- <body>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <link id="pageStyles" rel="stylesheet" href="/todo.css" />
+
+</head>
+
+<body>
     <div id="toDo-page">
         <div id="headerArea">
             <header id="title">To Do List:</header>
@@ -23,72 +25,123 @@
                 <button id="logOut">Log Out</button>
             </a>
         </div>
-        
+
         <form id="inputForm">
             <div id="newEntryBox">
                 <input id="inputBox" type="textarea" name="name" placeholder="New Entry Here">
                 <input id="addTask" type="submit" value="✓">
             </div>
             <ul id="listBox">
-                <div class="item" id="item1">
-                
-                </div>
             </ul>
 
-        <script>
-            userId = localStorage.getItem('userId');
-            document.addEventListener('DOMContentLoaded', function() {
-              firebase.database().ref('users/' + userId + '/todo').on('value', snapshot => {
-                  let data = snapshot.val();
-                  document.getElementById("listBox").innerText= data;
-               });
-              
-            });
-          </script> 
-          </form>
-          <Button id="editButton">✎</Button>
-          <Button id="deleteButton">X</Button>
+            <script>
+                userId = localStorage.getItem("userId");
+                document.addEventListener("DOMContentLoaded", function () {
+                    firebase.database().ref("users/" + userId + "/todo").on("value", snapshot => {
+                        let data = snapshot.val();
+                        document.getElementById("listBox").innerText = data;
+                    });
+
+                });
+            </script>
+        </form>
+        <Button id="editButton">✎</Button>
+        <Button id="deleteButton">X</Button>
     </div>
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
         //import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
         const firebaseConfig = {
-          apiKey: "AIzaSyDR-KgyPWiGSM7kz2dioVVWlFZO1g35SvE",
-          authDomain: "cpeg470-proj1-2b1ec.firebaseapp.com",
-          databaseURL: "https://cpeg470-proj1-2b1ec-default-rtdb.firebaseio.com",
-          projectId: "cpeg470-proj1-2b1ec",
-          storageBucket: "cpeg470-proj1-2b1ec.appspot.com",
-          messagingSenderId: "900830850408",
-          appId: "1:900830850408:web:f47604d97db5457b5c3add",
-          measurementId: "G-N41B7W2X03"
+            apiKey: "AIzaSyDR-KgyPWiGSM7kz2dioVVWlFZO1g35SvE",
+            authDomain: "cpeg470-proj1-2b1ec.firebaseapp.com",
+            databaseURL: "https://cpeg470-proj1-2b1ec-default-rtdb.firebaseio.com",
+            projectId: "cpeg470-proj1-2b1ec",
+            storageBucket: "cpeg470-proj1-2b1ec.appspot.com",
+            messagingSenderId: "900830850408",
+            appId: "1:900830850408:web:f47604d97db5457b5c3add",
+            measurementId: "G-N41B7W2X03"
         };
-  
+
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         import { getDatabase, ref, set, onValue, child, get, push, update } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
-  
+
         //const analytics = getAnalytics(app);
         const db = getDatabase(app);
 
         let inputBox = document.getElementById("inputBox");
         let addTask = document.getElementById("addTask");
         let listBox = document.getElementById("listBox");
+        let editButton = document.getElementById("editButton");
+        let deleteButton = document.getElementById("deleteButton");
 
-        const userId = localStorage.getItem('userId');
-        //console.log("userId " + userId); 
+        const userId = localStorage.getItem("userId");
+        console.log("userId " + userId);
 
-        function AddTask(){
+        function AddTask() {
+            inputForm.addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent the form from submitting normally
+
+                const newTask = inputBox.value.trim(); // Get the value from the input box
+
+                if (newTask) {
+                    // Use 'ref' to create a reference to 'todo'
+                    const todoRef = ref(db, "users/" + userId + "/todo");
+
+                    // Generate a new unique key
+                    const newTaskRef = push(todoRef); // This generates a unique key
+
+                    // Use set() to set the new task under the unique key
+                    set(newTaskRef, newTask).then(() => { // Set the task data directly
+                        console.log("Task added successfully!");
+                        inputBox.value = ""; // Clear the input box
+                    }).catch((error) => {
+                        console.error("Error adding task: ", error);
+                    });
+                } else {
+                    console.log("Need to add a task");
+                }
+            });
+        }
+
+
+        function loadTasks() {
+            const todoRef = ref(db, "users/" + userId + "/todo");
+
+            // Using onValue to listen for changes
+            onValue(todoRef, (snapshot) => {
+                const tasks = snapshot.val(); // Get the current value of 'todo'
+                if (tasks) {
+                    console.log("Current tasks: ", tasks);
+                    // Iterate through each task
+                    for (const key in tasks) {
+                        if (tasks.hasOwnProperty(key)) {
+                            const task = tasks[key]; // Access the task value
+                            //console.log(`Task ID: ${key}, Task: ${task}`); // Log the task ID and value
+                            document.getElementById("listBox").innerText = task;
+                        }
+                    }
+                } else {
+                    console.log("No tasks found.");
+                }
+            }, {
+                onlyOnce: true // Set to true if you only want to read the data once
+            });
+        }
+
+        function EditTask() {
 
         }
 
-        function EditTask(){
+        function DeleteTask() {
 
         }
 
-        function DeleteTask(){
+        addTask.addEventListener("click", AddTask);
+        editButton.addEventListener("click", EditTask);
+        deleteButton.addEventListener("click", DeleteTask);
+        loadTasks();
 
-        }
-
-        </script>
+    </script>
 </body>
