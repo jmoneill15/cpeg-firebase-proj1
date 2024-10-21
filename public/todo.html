@@ -21,9 +21,8 @@
     <div id="toDo-page">
         <div id="headerArea">
             <header id="title">To Do List:</header>
-            <a href="index.html">
-                <button id="logOut">Log Out</button>
-            </a>
+
+            <button id="logOut">Log Out</button>
         </div>
 
         <form id="inputForm">
@@ -33,7 +32,7 @@
             </div>
             <ul id="listBox">
                 <div id="taskBoxTest" class="taskBox">
-                    <div id="taskText" class="taskText">shshshhshshshshhshshs
+                    <div id="taskText" class="taskText">
                     </div>
                     <div class="buttonDiv">
                         <Button id="editButton" class="editButton">✎</Button>
@@ -71,9 +70,28 @@
         let listBox = document.getElementById("listBox");
         let editButton = document.getElementById("editButton");
         let deleteButton = document.getElementById("deleteButton");
-
+        let logOut = document.getElementById("logOut");
         const userId = localStorage.getItem("userId");
         console.log("userId " + userId);
+
+        if (!userId) {
+            window.location.href = "index.html";
+        } else {
+            const todoRef = ref(db, "users/" + userId + "/todo");
+
+            onValue(todoRef, (snapshot) => {
+                const tasks = snapshot.val();
+                // Handle the tasks data as needed
+            }, (error) => {
+                console.error("Error reading from Firebase: ", error);
+            });
+        }
+
+        function LogOut(){
+            localStorage.removeItem("userId");
+            window.location.href = 'index.html';
+        }
+
 
         function setupTaskListener() {
             const inputForm = document.getElementById("inputForm"); // Assuming this is your form ID
@@ -188,6 +206,8 @@
                 })
                 .catch((error) => {
                     console.error("Error deleting task: ", error);
+                    alert("Failed to delete task. Please try again.");
+
                 });
         }
 
@@ -196,5 +216,6 @@
             loadTasks();
         }
         document.addEventListener("DOMContentLoaded", startPage);
+        logOut.addEventListener('click', LogOut);
     </script>
 </body>

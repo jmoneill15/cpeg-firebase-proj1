@@ -27,7 +27,7 @@
       </div>
       <div id="passwordSection">
         <label for="password" id="passwordLabel">Password: </label>
-        <input type="text" id="password" placeholder="Enter Password" required>
+        <input type="password" id="password" placeholder="Enter Password" required>
       </div>
       <input id="signinButton" type="submit" value="Sign In">
     </form>
@@ -53,6 +53,62 @@
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
+      import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
+      const db = getDatabase();
+
+      let usernameInput = document.getElementById("username");
+      let passwordInput = document.getElementById("password");
+      let signinButton = document.getElementById("signinButton");
+      let loginForm = document.getElementById("loginform");
+
+      function checkUser(event) {
+        event.preventDefault();  // Prevent form from submitting and reloading the page
+
+        let username = usernameInput.value;
+        let password = passwordInput.value;
+
+        if (!username || !password) {
+            alert("Please enter both username and password.");
+        }
+
+        // Reference to Firebase 'users' node
+        const dbRef = ref(db, "users");
+
+        // Check user credentials in Firebase
+        onValue(dbRef, (snapshot) => {
+          let userExists = false;
+
+          snapshot.forEach((userSnapshot) => {
+            const userData = userSnapshot.val();
+            if (userData.username === username && userData.password === password) {
+              userExists = true;
+
+              // Store user id in localStorage or sessionStorage
+              console.log("trying to save id");
+              const userId = userSnapshot.key; 
+              console.log(userId);
+              localStorage.setItem('userId', userId);
+              console.log("saved id");
+              
+              console.log("Login successful for user:", userData.username);
+              window.location.href = "todo.html";  // Redirect to the todo page
+            }
+          });
+
+          if (!userExists) {
+            alert("Invalid username or password. Please try again.");
+          }
+        }, (error) => {
+          console.error("Error reading from Firebase:", error);
+          alert("Error logging in. Please try again later.");
+        });
+      }
+
+      // Add event listener to handle form submission
+      loginForm.addEventListener('submit', checkUser);
+
+      /*
       import { getDatabase, ref, set, onValue, child, get, push, update } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
       import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
@@ -67,53 +123,104 @@
       let userId = "";
 
       function checkUser(event) {
-          event.preventDefault(); // Prevents form from submitting and refreshing the page
+        event.preventDefault(); // Prevents form from submitting and refreshing the page
 
-          // Get input values
-          let usernameInput = document.getElementById("username").value;
-          let passwordInput = document.getElementById("password").value;
+        // Get input values
+        let usernameInput = document.getElementById("username").value;
+        let passwordInput = document.getElementById("password").value;
 
-          // Ensure the inputs are not empty
-          if (!usernameInput || !passwordInput) {
-            console.log("Please enter both username and password.");
-            return;
-          }
-
-          // Reference to your Firebase Database 'users' node
-          const dbRef = ref(db, "users");
-
-          console.log("Checking user credentials...");
-
-          // Fetch the users data from Firebase
-          onValue(dbRef, (snapshot) => {
-            let userExists = false;
-
-            snapshot.forEach((userSnapshot) => {
-              const userData = userSnapshot.val();
-
-              // Check if the username and password match
-              if (userData.username === usernameInput && userData.password === passwordInput) {
-                userExists = true;
-
-                //saves user id to later call for the todo list
-                userId = userData.id;
-                localStorage.setItem('userId', userId);
-
-                console.log("Login successful for user:", userData.username);
-                window.location.href = "todo.html"; // Redirect to next page
-              }
-            });
-
-            if (!userExists) {
-              console.log("Invalid username or password");
-              // You can show an error message to the user here
-            }
-          }, (error) => {
-            console.error("Error reading from Firebase:", error);
-          });
+        // Ensure the inputs are not empty
+        if (!usernameInput || !passwordInput) {
+          console.log("Please enter both username and password.");
+          return;
         }
 
-        signinButton.addEventListener('click', checkUser);
+        // Reference to your Firebase Database 'users' node
+        const dbRef = ref(db, "users");
+
+        console.log("Checking user credentials...");
+
+        // Fetch the users data from Firebase
+        onValue(dbRef, (snapshot) => {
+          let userExists = false;
+
+          snapshot.forEach((userSnapshot) => {
+            const userData = userSnapshot.val();
+
+            // Check if the username and password match
+            if (userData.username === usernameInput && userData.password === passwordInput) {
+              userExists = true;
+
+              // Save user id to later call for the todo list
+              userId = userData.id;
+              localStorage.setItem('userId', userId);
+
+              console.log("Login successful for user:", userData.username);
+              window.location.href = "todo.html"; // Redirect to next page
+            }
+          });
+
+          if (!userExists) {
+            console.log("Invalid username or password");
+            // You can show an error message to the user here
+          }
+        }, (error) => {
+          console.error("Error reading from Firebase:", error);
+        });
+      }
+        */
+      /*
+            function checkUser(event) {
+      
+              event.preventDefault(); // Prevents form from submitting and refreshing the page
+      
+              // Get input values
+              let usernameInput = document.getElementById("username").value;
+              let passwordInput = document.getElementById("password").value;
+      
+              // Ensure the inputs are not empty
+              if (!usernameInput || !passwordInput) {
+                console.log("Please enter both username and password.");
+                return;
+              }
+      
+              // Reference to your Firebase Database 'users' node
+              const dbRef = ref(db, "users");
+      
+              console.log("Checking user credentials...");
+      
+              // Fetch the users data from Firebase
+              onValue(dbRef, (snapshot) => {
+                let userExists = false;
+      
+                snapshot.forEach((userSnapshot) => {
+                  const userData = userSnapshot.val();
+      
+                  // Check if the username and password match
+                  if (userData.username === usernameInput && userData.password === passwordInput) {
+                    userExists = true;
+      
+                    //saves user id to later call for the todo list
+                    userId = userData.id;
+                    localStorage.setItem('userId', userId);
+      
+                    console.log("Login successful for user:", userData.username);
+                    window.location.href = "todo.html"; // Redirect to next page
+                  }
+                });
+      
+                if (!userExists) {
+                  console.log("Invalid username or password");
+                  // You can show an error message to the user here
+                }
+              }, (error) => {
+                console.error("Error reading from Firebase:", error);
+              });
+            }
+      */
+      //signinButton.1
+
+
     </script>
   </div>
 </body>

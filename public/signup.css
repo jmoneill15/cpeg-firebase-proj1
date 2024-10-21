@@ -29,6 +29,7 @@ body{
     background-color: #021f2aab;
     border-radius: 6px;
     padding: 20px;
+    margin-bottom: 30px;
 }
 
 #usernameSection{
@@ -44,6 +45,7 @@ body{
     font-family: "Garamond", Times, serif;
     margin-bottom: 17px;
     font-size: 20px;
+    margin-right: 7px;
 }
 
 #usernameInput{
@@ -154,6 +156,26 @@ body{
 }
 
 #submitButton:hover{
+    box-shadow: 0 3px 10px rgba(56, 5, 5, 0.606);
+    background-color: #360c18;
+}
+
+#loginPageButton{
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    border: 2px #32161F;
+    border-radius: 6px;
+    width: 200px;
+    height: 34px;
+    background-color: #32161F;
+    color: #FFFDFD;
+    font-size: 20px;
+    margin: 5px 31.5%;
+    font-family: "Garamond", Times, serif;
+}
+
+#loginPageButton:hover{
     box-shadow: 0 3px 10px rgba(56, 5, 5, 0.606);
     background-color: #360c18;
 }

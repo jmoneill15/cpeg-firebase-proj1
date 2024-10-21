@@ -31,11 +31,11 @@
                     <label id="password2">Confirm Password:</label>
                     <input type="text" id="passwordInput2" required>
                 </div>
-                <input id="submitButton" type="submit" >
+                <input id="submitButton" type="submit">
             </form>
         </div>
         <a href="index.html">
-            <button>Back to Login</button>
+            <button id="loginPageButton">Back to Login</button>
         </a>
 
     </div>
@@ -56,18 +56,86 @@
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        import { getDatabase, ref, set, onValue, child, get, push, update } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+        import { getDatabase, ref, set, push , get} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 
-        //const analytics = getAnalytics(app);
-        const db = getDatabase(app);
+        const db = getDatabase();
 
         let usernameInput = document.getElementById("usernameInput");
         let passwordInput1 = document.getElementById("passwordInput1");
         let passwordInput2 = document.getElementById("passwordInput2");
         let submitButton = document.getElementById("submitButton");
 
-        const newUserKey = push(child(ref(db), 'users')).key;
+        function AddData() {
+        const makeusername = usernameInput.value;
+        const password1 = passwordInput1.value;
+        const password2 = passwordInput2.value;
 
+        // Reference to the "users" node
+        const dbRef = ref(db, "users");
+
+        // Fetch the current users to check for existing username
+        get(dbRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const users = snapshot.val();
+                
+                // Check if the username already exists
+                let usernameExists = false;
+                for (let userId in users) {
+                    if (users[userId].username === makeusername) {
+                        usernameExists = true;
+                        break;
+                    }
+                }
+
+                if (usernameExists) {
+                    alert("Username already taken. Please choose a different username.");
+                } else if (password1 === password2) {
+                    // Proceed with user creation if passwords match
+                    const newUserKey = push(ref(db, 'users')).key;
+                    set(ref(db, "users/" + newUserKey), {
+                        username: makeusername,
+                        password: password1,  // Ideally hash this password
+                        id: newUserKey,
+                        todo: ""  // Add more fields as necessary
+                    }).then(() => {
+                        alert("Account Created Successfully");
+                        window.location.href = "index.html"; 
+                    }).catch((error) => {
+                        console.log("Error creating user:", error);
+                    });
+                } else {
+                    alert("Passwords do not match");
+                }
+            } else {
+                console.log("No users found in the database.");
+            }
+        }).catch((error) => {
+            console.log("Error checking username:", error);
+        });
+    }
+        //const newUserKey = push(ref(db, 'users')).key;
+/*
+        function AddData() {
+            const newUserKey = push(ref(db, 'users')).key;
+
+            if (passwordInput1.value === passwordInput2.value) {
+                set(ref(db, "users/" + newUserKey), {
+                    username: usernameInput.value,
+                    password: passwordInput1.value,  // Ideally hash this password
+                    id: newUserKey,
+                    todo: ""  // Add more fields as necessary
+                }).then(() => {
+                    alert("Account Created Successfully");
+                    window.location.href = "index.html"; 
+                }).catch((error) => {
+                    console.log("Error creating user:", error);
+                });
+            } else {
+                alert("Passwords do not match");
+            }
+        }
+*/
+/*
         function AddData() {
             if (passwordInput1.value === passwordInput2.value) {
                 set(ref(db, "users/" + newUserKey), {
@@ -86,26 +154,10 @@
                 console.log(error);
             }
        }
-    
-        
-        function RetrieveData(userKey) {
-            const dbRef = ref(db);
+       */
 
-            get(child(dbRef, "users/" + userKey)).then((snapshot) => {
-                if (snapshot.exists()) {
-                    usernameInput.value = snapshot.val().username;
-                    passwordInput1.value = snapshot.val().password;
-                    //newUserKey = snapshot.val().id;
-                }
-                else {
-                    alert("Account does not exist");
-                }
-            }).catch((error) => {
-                alert("Unsuccessful");
-                console.log(error);
-            });
-        }
 
+/*
         function createUser(){
             event.preventDefault();  
 
@@ -117,8 +169,19 @@
                 console.log(error);
             }
         }
+        */
 
-        submitButton.addEventListener('click', createUser);
+
+        signupForm.addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent form from reloading the page
+
+            // Check if username and passwords are filled correctly
+            if (usernameInput.value && passwordInput1.value && passwordInput2.value) {
+                AddData();
+            } else {
+                alert("Please fill in all fields");
+            }
+        });
     </script>
 </body>
 
