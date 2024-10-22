@@ -87,11 +87,11 @@
             });
         }
 
-        function LogOut(){
+        function LogOut() {
             localStorage.removeItem("userId");
+            localStorage.removeItem("sessionToken");
             window.location.href = 'index.html';
         }
-
 
         function setupTaskListener() {
             const inputForm = document.getElementById("inputForm"); // Assuming this is your form ID

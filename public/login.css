@@ -51,6 +51,7 @@ body{
     border-radius: 5px;
     font-family: "Garamond", Times, serif;
     padding: 4px;
+    font-size: 18px;
 }
 #username:hover{
     box-shadow: 0 2.5px 10px #011e29;
@@ -88,6 +89,7 @@ body{
     border-radius: 5px; 
     font-family: "Garamond", Times, serif;
     padding: 4px;
+    font-size: 18px;
 
 }
 #password:hover{

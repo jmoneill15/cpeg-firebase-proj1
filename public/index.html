@@ -53,7 +53,7 @@
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
-      import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+      import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 
       const db = getDatabase();
 
@@ -87,12 +87,22 @@
               // Store user id in localStorage or sessionStorage
               console.log("trying to save id");
               const userId = userSnapshot.key; 
-              console.log(userId);
-              localStorage.setItem('userId', userId);
-              console.log("saved id");
-              
-              console.log("Login successful for user:", userData.username);
-              window.location.href = "todo.html";  // Redirect to the todo page
+
+              const sessionToken = generateSessionToken();
+
+              set(ref(db, "users/" + userId + "/sessionToken"), sessionToken)
+                    .then(() => {
+                        // Store sessionToken in localStorage for client-side checks
+                        localStorage.setItem('sessionToken', sessionToken);
+                        localStorage.setItem('userId', userId);
+
+                        console.log("Login successful for user:", userData.username);
+                        window.location.href = "todo.html";  // Redirect to the todo page
+                    })
+                    .catch((error) => {
+                        console.error("Error updating sessionToken:", error);
+                        alert("Error logging in. Please try again later.");
+                    });
             }
           });
 
@@ -105,6 +115,9 @@
         });
       }
 
+      function generateSessionToken() {
+            return Math.random().toString(36).substring(2) + Date.now().toString(36);
+      }
       // Add event listener to handle form submission
       loginForm.addEventListener('submit', checkUser);
 

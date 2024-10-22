@@ -62,6 +62,7 @@ body{
     font-family: "Garamond", Times, serif;
     padding: 4px;
     margin-left: 5px;
+    font-size: 18px;
 }
 
 #usernameInput:hover{
@@ -97,6 +98,7 @@ body{
     font-family: "Garamond", Times, serif;
     padding: 4px;
     margin-left: 5px;
+    font-size: 18px;
 }
 #passwordInput1:hover{
     box-shadow: 0 2.5px 10px #022B3A;
@@ -132,6 +134,7 @@ body{
     font-family: "Garamond", Times, serif;
     padding: 4px;
     margin-left: 5px;
+    font-size: 18px;
 }
 
 #passwordInput2:hover{
